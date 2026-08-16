@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitoramento Térmico — Célula Peltier · MNPEF Polo 06 / UEFS</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --bg: #0B1220;
+    --bg-grid: #101a2e;
+    --panel: #121B2E;
+    --panel-2: #17223a;
+    --border: #223049;
+    --text: #E8EEF5;
+    --text-muted: #7C8CA6;
+    --cold: #4FD1E8;
+    --cold-soft: #2b8fa3;
+    --hot: #FF6B4A;
+    --hot-soft: #b5543d;
+    --ideal: #8CD9A5;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --radius: 10px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background:
+      linear-gradient(180deg, rgba(79,209,232,0.05), transparent 300px),
+      repeating-linear-gradient(0deg, var(--bg-grid) 0px, var(--bg-grid) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, var(--bg-grid) 0px, var(--bg-grid) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+
+  a{ color: var(--cold); }
+
+  /* ============ HEADER ============ */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 28px clamp(16px, 5vw, 56px);
+    border-bottom: 1px solid var(--border);
+    background: rgba(18,27,46,0.6);
+    backdrop-filter: blur(6px);
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+
+  .logo-slot{
+    height: 44px;
+    width: auto;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #ffffff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .logo-slot img{ height:100%; width:auto; max-width: 160px; object-fit: contain; }
+  .logo-slot .fallback{ font-family: var(--font-mono); font-size: 11px; color: #223049; }
+
+  .brand-text .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cold);
+    margin: 0 0 4px 0;
+  }
+  .brand-text h1{
+    font-family: var(--font-display);
+    font-size: clamp(18px, 2.4vw, 24px);
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .status-pill{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px;
+  }
+  .dot{
+    width:8px; height:8px; border-radius:50%;
+    background: var(--text-muted);
+  }
+  .dot.ok{ background: var(--ideal); box-shadow: 0 0 0 0 rgba(140,217,165,0.5); animation: pulse 2.2s infinite; }
+  .dot.err{ background: var(--hot); }
+
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(140,217,165,0.45); }
+    70%{ box-shadow: 0 0 0 8px rgba(140,217,165,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(140,217,165,0); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .dot.ok{ animation: none; }
+  }
+
+  main{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px clamp(16px, 5vw, 56px) 0;
+  }
+
+  /* ============ HERO INSTRUMENT PANEL ============ */
+  .instrument{
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    padding: clamp(20px, 4vw, 36px);
+    display:grid;
+    grid-template-columns: auto 1fr;
+    gap: 32px;
+    align-items:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .instrument::before{
+    content:"";
+    position:absolute; inset:0;
+    background: repeating-linear-gradient(180deg, rgba(79,209,232,0.035) 0px, rgba(79,209,232,0.035) 1px, transparent 1px, transparent 6px);
+    pointer-events:none;
+  }
+
+  .readout{
+    font-family: var(--font-mono);
+    font-size: clamp(56px, 9vw, 92px);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text);
+    display:flex;
+    align-items:baseline;
+    gap: 6px;
+    z-index:1;
+  }
+  .readout .unit{ font-size: 0.35em; color: var(--text-muted); font-weight: 500; }
+
+  .readout-label{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .badge{
+    display:inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    margin-top: 12px;
+  }
+
+  .metrics{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 18px;
+    z-index:1;
+  }
+  .metric{
+    border-left: 2px solid var(--border);
+    padding-left: 12px;
+  }
+  .metric .k{
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .metric .v{
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .metric .v.on{ color: var(--ideal); }
+  .metric .v.off{ color: var(--text-muted); }
+
+  @media (max-width: 640px){
+    .instrument{ grid-template-columns: 1fr; }
+  }
+
+  /* ============ CONTROLS ============ */
+  .controls{
+    display:flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 28px 0;
+  }
+  button.action{
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--bg);
+    background: var(--cold);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  button.action:hover{ transform: translateY(-1px); opacity:0.92; }
+  button.action:focus-visible{ outline: 2px solid var(--text); outline-offset:2px; }
+  button.action.secondary{
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  @media (prefers-reduced-motion: reduce){
+    button.action{ transition:none; }
+  }
+
+  /* ============ CHART PANELS ============ */
+  .panel-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  .panel-grid .full{ grid-column: 1 / -1; }
+  @media (max-width: 860px){
+    .panel-grid{ grid-template-columns: 1fr; }
+  }
+
+  .panel{
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--panel);
+    padding: 20px;
+  }
+  .panel .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cold);
+    margin: 0 0 2px 0;
+  }
+  .panel h2{
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    color: var(--text);
+  }
+  .chart-wrap{ height: 260px; position:relative; }
+
+  footer{
+    max-width: 1180px;
+    margin: 40px auto 0;
+    padding: 24px clamp(16px, 5vw, 56px);
+    border-top: 1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo-slot" id="logo-uefs">
+      <img src="logo-uefs.png" alt="Logo UEFS" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=fallback>UEFS</span>'">
+    </div>
+    <div class="logo-slot" id="logo-mnpef">
+      <img src="logo-mnpef.png" alt="Logo MNPEF Polo 06" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=fallback>MNPEF</span>'">
+    </div>
+    <div class="logo-slot" id="logo-sbf">
+      <img src="logo-sbf.png" alt="Logo Sociedade Brasileira de Física" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=fallback>SBF</span>'">
+    </div>
+    <div class="brand-text">
+      <p class="eyebrow">MNPEF · Polo 06 · UEFS</p>
+      <h1>Monitoramento Térmico — Célula Peltier</h1>
+    </div>
+  </div>
+  <div class="status-pill">
+    <span class="dot" id="conn-dot"></span>
+    <span id="conn-text">Conectando ao canal...</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO: LEITURA ATUAL ============ -->
+  <section class="instrument">
+    <div>
+      <p class="readout-label">Temperatura atual</p>
+      <div class="readout"><span id="temp-value">--</span><span class="unit">°C</span></div>
+      <span class="badge" id="status-badge" style="color: var(--text-muted);">aguardando dados</span>
+    </div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="k">Cronômetro (até 15°C)</div>
+        <div class="v" id="metric-cron">--</div>
+      </div>
+      <div class="metric">
+        <div class="k">Peltier</div>
+        <div class="v" id="metric-peltier">--</div>
+      </div>
+      <div class="metric">
+        <div class="k">Ventilador</div>
+        <div class="v" id="metric-vent">--</div>
+      </div>
+      <div class="metric">
+        <div class="k">Última leitura</div>
+        <div class="v" id="metric-time" style="font-size:14px;">--</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTROLES ============ -->
+  <div class="controls">
+    <button class="action" id="btn-refresh">↻ Gerar novo gráfico</button>
+    <button class="action secondary" id="btn-csv">⬇ Baixar planilha (CSV)</button>
+  </div>
+
+  <!-- ============ GRÁFICOS ============ -->
+  <div class="panel-grid">
+    <div class="panel full">
+      <p class="eyebrow">Série temporal</p>
+      <h2>Temperatura ao longo do tempo</h2>
+      <div class="chart-wrap"><canvas id="chart-linha"></canvas></div>
+    </div>
+
+    <div class="panel">
+      <p class="eyebrow">Distribuição</p>
+      <h2>Leituras por faixa de temperatura</h2>
+      <div class="chart-wrap"><canvas id="chart-coluna"></canvas></div>
+    </div>
+
+    <div class="panel">
+      <p class="eyebrow">Atuador</p>
+      <h2>Proporção Peltier ligada / desligada</h2>
+      <div class="chart-wrap"><canvas id="chart-setores"></canvas></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>MNPEF · Polo 06 · UEFS — Dissertação de Mestrado · 2026</span>
+  <span>Dados via ThingSpeak · atualização automática a cada 20s</span>
+</footer>
+
+<script>
+/* ======================================================================
+   CONFIGURAÇÃO — edite estas 3 linhas antes de publicar a página
+   ====================================================================== */
+const THINGSPEAK_CHANNEL_ID   = "SEU_CHANNEL_ID_AQUI";      // ex: 2345678
+const THINGSPEAK_READ_API_KEY = "SUA_READ_API_KEY_AQUI";    // aba API Keys do canal
+const RESULTS_COUNT           = 100;                        // quantas leituras recentes buscar
+const REFRESH_INTERVAL_MS     = 20000;                      // igual ao intervalo do ESP32
+
+/* Limiares de temperatura — precisam bater com os do firmware do ESP32 */
+const IDEAL_MAX = 22.0;
+const IDEAL_MIN = 19.0;
+const ALERTA_ALTA = 30.0;
+const BAIXA_TEMP = 18.0;
+
+/* ====================================================================== */
+
+let feedsAtuais = [];
+let chartLinha, chartColuna, chartSetores;
+
+function statusDaTemperatura(t){
+  if (t >= ALERTA_ALTA) return { label: "ALERTA: TEMP ALTA", color: getVar('--hot') };
+  if (t > IDEAL_MAX)    return { label: "ACIMA DO IDEAL",    color: getVar('--hot-soft') };
+  if (t >= IDEAL_MIN)   return { label: "TEMPERATURA IDEAL", color: getVar('--ideal') };
+  if (t > BAIXA_TEMP)   return { label: "ABAIXO DO IDEAL",   color: getVar('--cold-soft') };
+  return                       { label: "TEMPERATURA BAIXA", color: getVar('--cold') };
+}
+
+function getVar(name){
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function montarURL(){
+  let url = `https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/feeds.json?results=${RESULTS_COUNT}`;
+  if (THINGSPEAK_READ_API_KEY && THINGSPEAK_READ_API_KEY !== "SUA_READ_API_KEY_AQUI") {
+    url += `&api_key=${THINGSPEAK_READ_API_KEY}`;
+  }
+  return url;
+}
+
+async function buscarDados(){
+  const dot = document.getElementById('conn-dot');
+  const txt = document.getElementById('conn-text');
+  try{
+    const resp = await fetch(montarURL());
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const data = await resp.json();
+    feedsAtuais = (data.feeds || []).filter(f => f.field1 !== null && f.field1 !== undefined);
+
+    dot.className = "dot ok";
+    txt.textContent = "Conectado — " + feedsAtuais.length + " leituras carregadas";
+
+    atualizarInstrumento();
+    atualizarGraficos();
+  }catch(err){
+    dot.className = "dot err";
+    txt.textContent = "Falha ao buscar dados. Confira Channel ID / API Key.";
+    console.error(err);
+  }
+}
+
+function atualizarInstrumento(){
+  if (feedsAtuais.length === 0) return;
+  const ultima = feedsAtuais[feedsAtuais.length - 1];
+  const temp = parseFloat(ultima.field1);
+  const cron = ultima.field2 ?? "--";
+  const peltierOn = ultima.field3 === "1";
+  const ventOn = ultima.field4 === "1";
+
+  document.getElementById('temp-value').textContent = isNaN(temp) ? "--" : temp.toFixed(1);
+
+  const st = statusDaTemperatura(temp);
+  const badge = document.getElementById('status-badge');
+  badge.textContent = st.label;
+  badge.style.color = st.color;
+
+  document.getElementById('metric-cron').textContent = cron + "s";
+
+  const elPelt = document.getElementById('metric-peltier');
+  elPelt.textContent = peltierOn ? "LIGADA" : "desligada";
+  elPelt.className = "v " + (peltierOn ? "on" : "off");
+
+  const elVent = document.getElementById('metric-vent');
+  elVent.textContent = ventOn ? "LIGADO" : "desligado";
+  elVent.className = "v " + (ventOn ? "on" : "off");
+
+  const dt = new Date(ultima.created_at);
+  document.getElementById('metric-time').textContent = dt.toLocaleTimeString('pt-BR');
+}
+
+function atualizarGraficos(){
+  const labels = feedsAtuais.map(f => new Date(f.created_at).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', second:'2-digit'}));
+  const temps  = feedsAtuais.map(f => parseFloat(f.field1));
+
+  // ---- GRÁFICO DE LINHA: temperatura no tempo ----
+  const cor = getVar('--cold');
+  if (chartLinha) chartLinha.destroy();
+  chartLinha = new Chart(document.getElementById('chart-linha'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Temperatura (°C)',
+        data: temps,
+        borderColor: cor,
+        backgroundColor: 'rgba(79,209,232,0.12)',
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.25,
+        fill: true
+      }]
+    },
+    options: opcoesBase({ eixoX: true })
+  });
+
+  // ---- GRÁFICO DE COLUNA: contagem por faixa ----
+  const faixas = { "Alta": 0, "Acima": 0, "Ideal": 0, "Abaixo": 0, "Baixa": 0 };
+  temps.forEach(t => {
+    if (t >= ALERTA_ALTA) faixas["Alta"]++;
+    else if (t > IDEAL_MAX) faixas["Acima"]++;
+    else if (t >= IDEAL_MIN) faixas["Ideal"]++;
+    else if (t > BAIXA_TEMP) faixas["Abaixo"]++;
+    else faixas["Baixa"]++;
+  });
+  if (chartColuna) chartColuna.destroy();
+  chartColuna = new Chart(document.getElementById('chart-coluna'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(faixas),
+      datasets: [{
+        label: 'Nº de leituras',
+        data: Object.values(faixas),
+        backgroundColor: [getVar('--hot'), getVar('--hot-soft'), getVar('--ideal'), getVar('--cold-soft'), getVar('--cold')],
+        borderRadius: 4
+      }]
+    },
+    options: opcoesBase({ eixoX: true, legenda: false })
+  });
+
+  // ---- GRÁFICO DE SETORES: Peltier ligada x desligada ----
+  const ligada = feedsAtuais.filter(f => f.field3 === "1").length;
+  const desligada = feedsAtuais.length - ligada;
+  if (chartSetores) chartSetores.destroy();
+  chartSetores = new Chart(document.getElementById('chart-setores'), {
+    type: 'pie',
+    data: {
+      labels: ['Ligada', 'Desligada'],
+      datasets: [{
+        data: [ligada, desligada],
+        backgroundColor: [getVar('--ideal'), getVar('--border')],
+        borderColor: getVar('--panel'),
+        borderWidth: 2
+      }]
+    },
+    options: opcoesBase({ eixoX: false, legenda: true })
+  });
+}
+
+function opcoesBase({ eixoX, legenda = false }){
+  const corTexto = getVar('--text-muted');
+  const corGrade = getVar('--border');
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? false : { duration: 400 },
+    plugins: {
+      legend: { display: legenda, labels: { color: corTexto, font: { family: "'JetBrains Mono', monospace", size: 11 } } },
+      tooltip: { titleFont: { family: "'JetBrains Mono', monospace" }, bodyFont: { family: "'JetBrains Mono', monospace" } }
+    },
+    scales: eixoX === false ? {} : {
+      x: { ticks: { color: corTexto, font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 8 }, grid: { color: corGrade } },
+      y: { ticks: { color: corTexto, font: { size: 10 } }, grid: { color: corGrade } }
+    }
+  };
+}
+
+/* ============ EXPORTAÇÃO CSV ============ */
+function baixarCSV(){
+  if (feedsAtuais.length === 0){
+    alert("Ainda não há dados carregados para exportar.");
+    return;
+  }
+  let csv = "Data_Hora,Temperatura_C,Cronometro_s,Peltier,Ventilador\n";
+  feedsAtuais.forEach(f => {
+    const dt = new Date(f.created_at).toLocaleString('pt-BR');
+    csv += `${dt},${f.field1},${f.field2},${f.field3 === "1" ? "LIGADA" : "DESLIGADA"},${f.field4 === "1" ? "LIGADO" : "DESLIGADO"}\n`;
+  });
+
+  const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "dados_peltier_" + new Date().toISOString().slice(0,19).replace(/[:T]/g,'-') + ".csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ============ EVENTOS ============ */
+document.getElementById('btn-refresh').addEventListener('click', () => {
+  buscarDados();
+  reiniciarAutoRefresh();
+});
+document.getElementById('btn-csv').addEventListener('click', baixarCSV);
+
+let intervaloAtual;
+function reiniciarAutoRefresh(){
+  if (intervaloAtual) clearInterval(intervaloAtual);
+  intervaloAtual = setInterval(buscarDados, REFRESH_INTERVAL_MS);
+}
+
+/* ============ INICIALIZAÇÃO ============ */
+buscarDados();
+reiniciarAutoRefresh();
+</script>
+
+</body>
+</html>
