@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monitoramento Térmico & Calculadora de COP — Célula Peltier · MNPEF Polo 06 / UEFS</title>
+<title>Monitoramento do Refrigerador Peltier · MNPEF Polo 06 / UEFS</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -544,7 +544,7 @@
     </div>
     <div class="brand-text">
       <p class="eyebrow">MNPEF · Polo 06 · UEFS</p>
-      <h1>Monitoramento Térmico & Calculadora Peltier</h1>
+      <h1>Monitoramento do Refrigerador Peltier</h1>
     </div>
   </div>
   <div class="header-actions">
@@ -726,6 +726,29 @@
     <button class="action secondary" id="btn-auto-cop">⚡ Usar Dados Atuais na Calculadora</button>
   </div>
 
+
+  <!-- ============ GRÁFICOS ============ -->
+  <div class="panel-grid">
+    <div class="panel full">
+      <p class="eyebrow">Série temporal</p>
+      <h2>Temperatura ao longo do tempo</h2>
+      <div class="chart-wrap"><canvas id="chart-linha"></canvas></div>
+    </div>
+
+    <div class="panel">
+      <p class="eyebrow">Distribuição</p>
+      <h2>Leituras por faixa de temperatura</h2>
+      <div class="chart-wrap"><canvas id="chart-coluna"></canvas></div>
+    </div>
+
+    <div class="panel">
+      <p class="eyebrow">Atuador</p>
+      <h2>Proporção Peltier ligada / desligada</h2>
+      <div class="chart-wrap"><canvas id="chart-setores"></canvas></div>
+    </div>
+  </div>
+
+
   <!-- ============ CALCULADORA DE COP ============ -->
   <section class="calc-section" id="secao-calculadora">
     <div class="calc-header">
@@ -825,31 +848,10 @@
     </div>
   </section>
 
-  <!-- ============ GRÁFICOS ============ -->
-  <div class="panel-grid">
-    <div class="panel full">
-      <p class="eyebrow">Série temporal</p>
-      <h2>Temperatura ao longo do tempo</h2>
-      <div class="chart-wrap"><canvas id="chart-linha"></canvas></div>
-    </div>
-
-    <div class="panel">
-      <p class="eyebrow">Distribuição</p>
-      <h2>Leituras por faixa de temperatura</h2>
-      <div class="chart-wrap"><canvas id="chart-coluna"></canvas></div>
-    </div>
-
-    <div class="panel">
-      <p class="eyebrow">Atuador</p>
-      <h2>Proporção Peltier ligada / desligada</h2>
-      <div class="chart-wrap"><canvas id="chart-setores"></canvas></div>
-    </div>
-  </div>
-
-  <!-- ============ CENA FINAL: CIENTISTA NA BANCADA (PIXEL ART) ============ -->
+  <!-- ============ CENA FINAL:  ============ -->
   <div class="panel full" style="text-align:center;">
     <p class="eyebrow">Bastidores</p>
-    <h2>Cientista na bancada de eletrônica</h2>
+    <h2></h2>
     <svg width="100%" viewBox="0 0 160 100" style="max-width:480px; display:block; margin:0 auto; shape-rendering:crispEdges;">
       <rect x="0" y="0" width="160" height="78" fill="#101a2e"/>
 
@@ -900,6 +902,9 @@
         <circle class="fumaca" cx="113" cy="48" r="1" fill="#cfd6de" style="animation-delay:1.2s;"/>
       </g>
     </svg>
+    <p style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); margin-top: 12px; line-height: 1.6;">
+      MNPEF · SBF<br>UEFS · POLO 06
+    </p>
   </div>
 
 </main>
