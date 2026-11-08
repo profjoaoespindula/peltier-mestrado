@@ -12,21 +12,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-  /* ============ DESIGN TOKENS ============ */
+  /* ============ DESIGN TOKENS (Acessibilidade: Fundo Branco / Texto Preto) ============ */
   :root{
-    --bg: #0B1220;
-    --bg-grid: #101a2e;
-    --panel: #121B2E;
-    --panel-2: #17223a;
-    --border: #223049;
-    --text: #E8EEF5;
-    --text-muted: #7C8CA6;
-    --cold: #4FD1E8;
-    --cold-soft: #2b8fa3;
-    --hot: #FF6B4A;
-    --hot-soft: #b5543d;
-    --ideal: #8CD9A5;
-    --accent: #FFB800;
+    --bg: #FFFFFF;
+    --bg-grid: #F3F4F6;
+    --panel: #F9FAFB;
+    --panel-2: #F3F4F6;
+    --border: #D1D5DB;
+    --text: #111827;
+    --text-muted: #4B5563;
+    /* Azul, verde e âmbar um degrau mais escuros que o padrão: contraste mínimo 4,5:1 (WCAG AA) */
+    --cold: #0369A1;
+    --cold-soft: #075985;
+    --hot: #DC2626;
+    --hot-soft: #B91C1C;
+    --ideal: #15803D;
+    --accent: #B45309;
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
@@ -37,11 +38,7 @@
 
   body{
     margin:0;
-    background:
-      linear-gradient(180deg, rgba(79,209,232,0.05), transparent 300px),
-      repeating-linear-gradient(0deg, var(--bg-grid) 0px, var(--bg-grid) 1px, transparent 1px, transparent 32px),
-      repeating-linear-gradient(90deg, var(--bg-grid) 0px, var(--bg-grid) 1px, transparent 1px, transparent 32px),
-      var(--bg);
+    background: var(--bg);
     color: var(--text);
     font-family: var(--font-body);
     min-height: 100vh;
@@ -58,9 +55,8 @@
     gap: 24px;
     flex-wrap: wrap;
     padding: 24px clamp(16px, 5vw, 56px);
-    border-bottom: 1px solid var(--border);
-    background: rgba(18,27,46,0.8);
-    backdrop-filter: blur(8px);
+    border-bottom: 2px solid var(--border);
+    background: #FFFFFF;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -78,7 +74,7 @@
     padding: 6px 12px;
     border-radius: 8px;
     border: 1px solid var(--border);
-    background: #ffffff;
+    background: #FFFFFF;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -86,20 +82,22 @@
     flex-shrink:0;
   }
   .logo-slot img{ height:100%; width:auto; max-width: 160px; object-fit: contain; }
-  .logo-slot .fallback{ font-family: var(--font-mono); font-size: 11px; color: #223049; font-weight:700; }
+  .logo-slot .fallback{ font-family: var(--font-mono); font-size: 11px; color: #111827; font-weight:700; }
 
   .brand-text .eyebrow{
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--cold);
+    color: var(--cold-soft);
+    font-weight: 600;
     margin: 0 0 4px 0;
   }
   .brand-text h1{
     font-family: var(--font-display);
     font-size: clamp(18px, 2.4vw, 24px);
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--text);
     margin: 0;
     letter-spacing: -0.01em;
   }
@@ -116,7 +114,8 @@
     gap:8px;
     font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--text-muted);
+    font-weight: 600;
+    color: var(--text);
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 6px 14px;
@@ -126,13 +125,13 @@
     width:8px; height:8px; border-radius:50%;
     background: var(--text-muted);
   }
-  .dot.ok{ background: var(--ideal); box-shadow: 0 0 0 0 rgba(140,217,165,0.5); animation: pulse 2.2s infinite; }
+  .dot.ok{ background: var(--ideal); box-shadow: 0 0 0 0 rgba(22,163,74,0.4); animation: pulse 2.2s infinite; }
   .dot.err{ background: var(--hot); }
 
   @keyframes pulse{
-    0%{ box-shadow: 0 0 0 0 rgba(140,217,165,0.45); }
-    70%{ box-shadow: 0 0 0 8px rgba(140,217,165,0); }
-    100%{ box-shadow: 0 0 0 0 rgba(140,217,165,0); }
+    0%{ box-shadow: 0 0 0 0 rgba(22,163,74,0.4); }
+    70%{ box-shadow: 0 0 0 8px rgba(22,163,74,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(22,163,74,0); }
   }
 
   main{
@@ -141,7 +140,7 @@
     padding: 32px clamp(16px, 5vw, 56px) 0;
   }
 
-  /* ============ CARTÕES INDIVIDUALIZADOS: TEMPERATURA / CRONÔMETRO / ATUADORES ============ */
+  /* ============ CARTÕES INDIVIDUALIZADOS ============ */
   .cards-hero{
     display:grid;
     grid-template-columns: 1.6fr 1fr;
@@ -152,16 +151,11 @@
   .card{
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    background: var(--panel);
     padding: clamp(18px, 3vw, 28px);
     position: relative;
     overflow: hidden;
-  }
-  .card::before{
-    content:"";
-    position:absolute; inset:0;
-    background: repeating-linear-gradient(180deg, rgba(79,209,232,0.035) 0px, rgba(79,209,232,0.035) 1px, transparent 1px, transparent 6px);
-    pointer-events:none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   }
   .card-temp{
     grid-row: 1 / 3;
@@ -194,7 +188,7 @@
     justify-content:center;
     margin-top: 8px;
   }
-  .readout .unit{ font-size: 0.35em; color: var(--text-muted); font-weight: 500; }
+  .readout .unit{ font-size: 0.35em; color: var(--text-muted); font-weight: 600; }
 
   .readout-label{
     font-family: var(--font-mono);
@@ -202,6 +196,7 @@
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-muted);
+    font-weight: 600;
     margin-bottom: 8px;
     z-index:1;
   }
@@ -210,16 +205,18 @@
     display:inline-block;
     font-family: var(--font-mono);
     font-size: 12px;
+    font-weight: 700;
     letter-spacing: 0.04em;
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 999px;
-    border: 1px solid currentColor;
+    border: 2px solid currentColor;
     margin-top: 12px;
     z-index:1;
   }
 
   .sub-label{
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 500;
     color: var(--text-muted);
     margin-top: 8px;
     z-index:1;
@@ -236,31 +233,21 @@
   .atuador-row:last-child{ border-bottom:none; }
   .atuador-row .v{
     font-family: var(--font-mono);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 15px;
   }
   .v.on{ color: var(--ideal); }
   .v.off{ color: var(--text-muted); }
 
-  /* ---- Termômetro animado: transições suaves de nível e cor ---- */
+  /* ---- Termômetro e Animações ---- */
   #term-fill, #term-bulb{ transition: fill .4s ease; }
   #term-fill{ transition: fill .4s ease, height .4s ease, y .4s ease; }
-  #icone-frio-solido, #icone-frio-derretendo, #icone-morno, #icone-quente{ transition: opacity .35s ease; }
-  .floco{ animation: queda 3s linear infinite; }
-  .luz-caminhao{ animation: piscar 1s infinite; }
-  .balao{ animation: flutuar 1.6s ease-in-out infinite; }
-  .agua{ animation: fluxo .6s linear infinite; }
-  @keyframes queda{ 0%{ transform: translateY(-8px); opacity:0; } 15%{ opacity:1; } 100%{ transform: translateY(46px); opacity:0; } }
-  @keyframes piscar{ 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
-  @keyframes flutuar{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-3px); } }
-  @keyframes fluxo{ to{ stroke-dashoffset: -20; } }
-  @keyframes subir{ 0%{ transform: translateY(0); opacity:0; } 20%{ opacity:.8; } 100%{ transform: translateY(-14px); opacity:0; } }
-  .fumaca{ animation: subir 1.8s ease-out infinite; }
-  .onda{ animation: fluxo 1s linear infinite; }
-  .pisca{ animation: piscar 1.2s infinite; }
-  @media (prefers-reduced-motion: reduce){
-    #term-fill, #term-bulb, #icone-frio-solido, #icone-frio-derretendo, #icone-morno, #icone-quente{ transition: none !important; }
-    .floco, .luz-caminhao, .balao, .agua, .fumaca, .onda, .pisca{ animation: none !important; }
+  #icone-frio-solido, #icone-frio-derretendo, #icone-ideal-brisa, #icone-quente{ transition: opacity .35s ease; }
+  .brisa-linha{ animation: soproBrisa 2s linear infinite; }
+  @keyframes soproBrisa {
+    0% { stroke-dashoffset: 20; opacity: 0; }
+    50% { opacity: 1; }
+    100% { stroke-dashoffset: -20; opacity: 0; }
   }
 
   /* ============ CONTROLS ============ */
@@ -274,7 +261,7 @@
     font-family: var(--font-body);
     font-weight: 600;
     font-size: 14px;
-    color: var(--bg);
+    color: #FFFFFF;
     background: var(--cold);
     border: none;
     border-radius: 8px;
@@ -284,27 +271,28 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   }
   button.action:hover{ transform: translateY(-1px); opacity:0.92; }
-  button.action:focus-visible{ outline: 2px solid var(--text); outline-offset:2px; }
+  button.action:focus-visible{ outline: 3px solid var(--text); outline-offset:2px; }
   button.action.secondary{
-    background: transparent;
+    background: #FFFFFF;
     color: var(--text);
     border: 1px solid var(--border);
   }
   button.action.accent{
     background: var(--accent);
-    color: #000;
+    color: #FFFFFF;
   }
 
-  /* ============ CALCULATOR SECTION ============ */
+  /* ============ CALCULADORA DE COP ============ */
   .calc-section{
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--panel);
     padding: clamp(20px, 4vw, 32px);
     margin-bottom: 32px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   }
 
   .calc-header{
@@ -320,6 +308,8 @@
   .calc-title h2{
     font-family: var(--font-display);
     font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
     margin: 0 0 4px 0;
   }
   .calc-title p{
@@ -335,7 +325,7 @@
   }
 
   .calc-card{
-    background: var(--panel-2);
+    background: #FFFFFF;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 20px;
@@ -345,7 +335,8 @@
     font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--cold);
+    color: var(--cold-soft);
+    font-weight: 700;
     margin: 0 0 16px 0;
     display: flex;
     align-items: center;
@@ -360,13 +351,14 @@
   .input-group label{
     display: block;
     font-size: 12px;
-    color: var(--text-muted);
+    font-weight: 600;
+    color: var(--text);
     margin-bottom: 6px;
   }
 
   .input-group input{
     width: 100%;
-    background: var(--bg);
+    background: #FFFFFF;
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 10px 12px;
@@ -377,17 +369,19 @@
   .input-group input:focus{
     outline: none;
     border-color: var(--cold);
+    box-shadow: 0 0 0 2px rgba(2,132,199,0.2);
   }
 
   .notice-box{
-    background: rgba(255, 184, 0, 0.08);
-    border: 1px solid rgba(255, 184, 0, 0.25);
+    background: #FEF3C7;
+    border: 1px solid #F59E0B;
     border-radius: 6px;
     padding: 12px;
     font-size: 11px;
     line-height: 1.5;
-    color: #e0ca82;
+    color: #92400E;
     margin-top: 14px;
+    font-weight: 500;
   }
 
   /* COP Results Cards */
@@ -399,7 +393,7 @@
   }
 
   .result-card{
-    background: var(--bg);
+    background: #FFFFFF;
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 16px;
@@ -407,13 +401,14 @@
   }
   .result-card.highlight{
     border-color: var(--ideal);
-    background: rgba(140, 217, 165, 0.05);
+    background: #F0FDF4;
   }
   .result-card .lbl{
     font-family: var(--font-mono);
     font-size: 10px;
     text-transform: uppercase;
     color: var(--text-muted);
+    font-weight: 700;
     margin-bottom: 8px;
   }
   .result-card .val{
@@ -443,19 +438,21 @@
     border-radius: var(--radius);
     background: var(--panel);
     padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   }
   .panel .eyebrow{
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--cold);
+    color: var(--cold-soft);
+    font-weight: 700;
     margin: 0 0 2px 0;
   }
   .panel h2{
     font-family: var(--font-display);
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     margin: 0 0 16px 0;
     color: var(--text);
   }
@@ -465,8 +462,8 @@
   .modal-overlay{
     position: fixed;
     inset: 0;
-    background: rgba(11, 18, 32, 0.85);
-    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -480,7 +477,7 @@
     pointer-events: auto;
   }
   .modal-content{
-    background: var(--panel-2);
+    background: #FFFFFF;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     max-width: 600px;
@@ -489,13 +486,14 @@
     overflow-y: auto;
     padding: 28px;
     position: relative;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
   }
   .modal-content h3{
     font-family: var(--font-display);
     font-size: 20px;
+    font-weight: 700;
     margin-top: 0;
-    color: var(--cold);
+    color: var(--text);
   }
   .modal-content ol{
     padding-left: 20px;
@@ -509,24 +507,84 @@
     top: 20px; right: 20px;
     background: transparent;
     border: none;
-    color: var(--text-muted);
-    font-size: 20px;
+    color: var(--text);
+    font-size: 22px;
     cursor: pointer;
   }
+
+  /* ============ PAINEL ADMIN ============ */
+  .admin-warning{
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #991B1B;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .admin-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .admin-remote{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .admin-remote button{
+    flex: 1;
+    min-width: 110px;
+  }
+  .modo-atual{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  .modo-atual .valor{ color: var(--text); font-weight: 700; }
 
   footer{
     max-width: 1180px;
     margin: 40px auto 0;
     padding: 24px clamp(16px, 5vw, 56px);
-    border-top: 1px solid var(--border);
+    border-top: 2px solid var(--border);
     display:flex;
     justify-content:space-between;
     flex-wrap:wrap;
     gap: 12px;
     font-family: var(--font-mono);
     font-size: 12px;
+    font-weight: 600;
     color: var(--text-muted);
   }
+
+  /* ---- Animações: neve, balão "QUENTE" e cena do cientista em pixel art ---- */
+  .floco{ animation: queda 3s linear infinite; }
+  .balao{ animation: flutuar 1.6s ease-in-out infinite; }
+  .flutuar{ animation: flutuar 1.6s ease-in-out infinite; }
+  .fumaca{ animation: subir 1.8s ease-out infinite; }
+  .onda{ animation: fluxo 1s linear infinite; }
+  .pisca{ animation: piscar 1.2s infinite; }
+  @keyframes queda{ 0%{ transform: translateY(-8px); opacity:0; } 15%{ opacity:1; } 100%{ transform: translateY(46px); opacity:0; } }
+  @keyframes piscar{ 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
+  @keyframes flutuar{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-3px); } }
+  @keyframes fluxo{ to{ stroke-dashoffset: -20; } }
+  @keyframes subir{ 0%{ transform: translateY(0); opacity:0; } 20%{ opacity:.8; } 100%{ transform: translateY(-14px); opacity:0; } }
+  @media (prefers-reduced-motion: reduce){
+    #term-fill, #term-bulb, #icone-frio-solido, #icone-frio-derretendo, #icone-ideal-brisa, #icone-quente{ transition: none !important; }
+    .floco, .balao, .flutuar, .fumaca, .onda, .pisca, .brisa-linha, .dot.ok{ animation: none !important; }
+  }
+
+
+  /* ---- Painel admin: largura e empilhamento dos modais ---- */
+  #modal-admin .modal-content{ max-width: 440px; }
+  #modal-admin .modal-content.largo{ max-width: 1040px; }
+  #modal-instrucoes{ z-index: 1100; }   /* as instruções abrem POR CIMA do painel admin */
+  .calc-acoes{ display:flex; gap:10px; flex-wrap:wrap; }
 </style>
 </head>
 <body>
@@ -552,6 +610,7 @@
       <span class="dot" id="conn-dot"></span>
       <span id="conn-text">Conectando ao canal...</span>
     </div>
+    <button class="action secondary" id="btn-abrir-admin" aria-haspopup="dialog" style="padding:8px 14px; font-size:12px;">🔒 Admin</button>
   </div>
 </header>
 
@@ -564,139 +623,75 @@
     <div class="card card-temp">
       <p class="readout-label">Temperatura atual</p>
       <svg width="100%" viewBox="0 0 340 140" style="max-width:420px; display:block;">
-        <rect x="14" y="6" width="12" height="76" rx="6" fill="none" stroke="#2b3a55" stroke-width="2"/>
-        <rect id="term-fill" x="15" y="40" width="10" height="42" rx="5" fill="#4FD1E8"/>
-        <circle id="term-bulb" cx="20" cy="92" r="12" fill="#4FD1E8" stroke="#2b3a55" stroke-width="2"/>
+        <rect x="14" y="6" width="12" height="76" rx="6" fill="none" stroke="#4B5563" stroke-width="2"/>
+        <rect id="term-fill" x="15" y="40" width="10" height="42" rx="5" fill="#0284C7"/>
+        <circle id="term-bulb" cx="20" cy="92" r="12" fill="#0284C7" stroke="#4B5563" stroke-width="2"/>
 
-        <line x1="26" y1="76" x2="31" y2="76" stroke="#7C8CA6" stroke-width="1"/>
-        <text x="33" y="78" font-size="6" font-family="monospace" fill="#7C8CA6">-5</text>
-        <line x1="26" y1="57" x2="31" y2="57" stroke="#7C8CA6" stroke-width="1"/>
-        <text x="33" y="59" font-size="6" font-family="monospace" fill="#7C8CA6">5</text>
-        <line x1="26" y1="38" x2="31" y2="38" stroke="#7C8CA6" stroke-width="1"/>
-        <text x="33" y="40" font-size="6" font-family="monospace" fill="#7C8CA6">15</text>
-        <line x1="26" y1="19" x2="31" y2="19" stroke="#7C8CA6" stroke-width="1"/>
-        <text x="33" y="21" font-size="6" font-family="monospace" fill="#7C8CA6">25</text>
-        <line x1="26" y1="3" x2="31" y2="3" stroke="#7C8CA6" stroke-width="1"/>
-        <text x="33" y="5" font-size="6" font-family="monospace" fill="#7C8CA6">35</text>
+        <line x1="26" y1="76" x2="31" y2="76" stroke="#4B5563" stroke-width="1.5"/>
+        <text x="33" y="78" font-size="6" font-family="monospace" font-weight="700" fill="#111827">-5</text>
+        <line x1="26" y1="57" x2="31" y2="57" stroke="#4B5563" stroke-width="1.5"/>
+        <text x="33" y="59" font-size="6" font-family="monospace" font-weight="700" fill="#111827">5</text>
+        <line x1="26" y1="38" x2="31" y2="38" stroke="#4B5563" stroke-width="1.5"/>
+        <text x="33" y="40" font-size="6" font-family="monospace" font-weight="700" fill="#111827">15</text>
+        <line x1="26" y1="19" x2="31" y2="19" stroke="#4B5563" stroke-width="1.5"/>
+        <text x="33" y="21" font-size="6" font-family="monospace" font-weight="700" fill="#111827">25</text>
+        <line x1="26" y1="3" x2="31" y2="3" stroke="#4B5563" stroke-width="1.5"/>
+        <text x="33" y="5" font-size="6" font-family="monospace" font-weight="700" fill="#111827">35</text>
 
+        <!-- ÍCONE 1: FRIO SÓLIDO (<= 10°C) -->
         <g id="icone-frio-solido" style="opacity:1;">
-          <circle cx="160" cy="71" r="12" fill="#EAF6FB" stroke="#B7DDE8" stroke-width="1.5"/>
-          <circle cx="160" cy="53" r="9" fill="#EAF6FB" stroke="#B7DDE8" stroke-width="1.5"/>
-          <circle cx="156" cy="51" r="1.4" fill="#2b3a55"/>
-          <circle cx="164" cy="51" r="1.4" fill="#2b3a55"/>
-          <path d="M160 54 L164 56 L160 57Z" fill="#FF9B4A"/>
-          <line x1="148" y1="69" x2="140" y2="63" stroke="#8b8b8b" stroke-width="1.5"/>
-          <line x1="172" y1="69" x2="180" y2="63" stroke="#8b8b8b" stroke-width="1.5"/>
-          <g class="floco" style="animation-delay:0s;"><circle cx="140" cy="33" r="1.6" fill="#EAF6FB"/></g>
-          <g class="floco" style="animation-delay:1s;"><circle cx="178" cy="29" r="1.6" fill="#EAF6FB"/></g>
-          <g class="floco" style="animation-delay:2s;"><circle cx="160" cy="27" r="1.6" fill="#EAF6FB"/></g>
+          <circle cx="160" cy="71" r="12" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+          <circle cx="160" cy="53" r="9" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+          <circle cx="156" cy="51" r="1.4" fill="#111827"/>
+          <circle cx="164" cy="51" r="1.4" fill="#111827"/>
+          <path d="M160 54 L164 56 L160 57Z" fill="#D97706"/>
+          <line x1="148" y1="69" x2="140" y2="63" stroke="#4B5563" stroke-width="1.5"/>
+          <line x1="172" y1="69" x2="180" y2="63" stroke="#4B5563" stroke-width="1.5"/>
+          <g class="floco" style="animation-delay:0s;"><circle cx="140" cy="33" r="1.8" fill="#0284C7"/></g>
+          <g class="floco" style="animation-delay:1s;"><circle cx="178" cy="29" r="1.8" fill="#0284C7"/></g>
+          <g class="floco" style="animation-delay:2s;"><circle cx="160" cy="27" r="1.8" fill="#0284C7"/></g>
         </g>
 
+        <!-- ÍCONE 2: FRIO DERRETENDO (10°C a 22°C) -->
         <g id="icone-frio-derretendo" style="opacity:0;">
-          <ellipse cx="160" cy="76" rx="16" ry="3.5" fill="#B7DDE8" opacity="0.5"/>
-          <ellipse cx="160" cy="69" rx="13" ry="8" fill="#EAF6FB" stroke="#B7DDE8" stroke-width="1.5"/>
-          <ellipse cx="157" cy="58" rx="7" ry="5" fill="#EAF6FB" stroke="#B7DDE8" stroke-width="1.5"/>
-          <path d="M153 57 Q155 59 157 57" stroke="#2b3a55" stroke-width="1.3" fill="none"/>
-          <path d="M159 57 Q161 59 163 57" stroke="#2b3a55" stroke-width="1.3" fill="none"/>
-          <path d="M157 60 L161 62 L156 63Z" fill="#FF9B4A"/>
-          <path d="M148 71 Q147 74 149 76" stroke="#B7DDE8" stroke-width="1.3" fill="none" stroke-linecap="round"/>
-          <path d="M172 71 Q173 74 171 76" stroke="#B7DDE8" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          <ellipse cx="160" cy="76" rx="16" ry="3.5" fill="#BAE6FD" opacity="0.6"/>
+          <ellipse cx="160" cy="69" rx="13" ry="8" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+          <ellipse cx="157" cy="58" rx="7" ry="5" fill="#E0F2FE" stroke="#0284C7" stroke-width="1.5"/>
+          <path d="M153 57 Q155 59 157 57" stroke="#111827" stroke-width="1.3" fill="none"/>
+          <path d="M159 57 Q161 59 163 57" stroke="#111827" stroke-width="1.3" fill="none"/>
+          <path d="M157 60 L161 62 L156 63Z" fill="#D97706"/>
+          <path d="M148 71 Q147 74 149 76" stroke="#0284C7" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+          <path d="M172 71 Q173 74 171 76" stroke="#0284C7" stroke-width="1.3" fill="none" stroke-linecap="round"/>
         </g>
 
-        <g id="icone-morno" style="opacity:0;">
-          <circle cx="160" cy="55" r="14" fill="#F2C94C"/>
-          <line x1="160" y1="31" x2="160" y2="37" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <line x1="160" y1="73" x2="160" y2="79" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <line x1="136" y1="55" x2="142" y2="55" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <line x1="178" y1="55" x2="184" y2="55" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <line x1="142" y1="37" x2="146" y2="41" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <line x1="174" y1="69" x2="178" y2="73" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <line x1="178" y1="37" x2="174" y2="41" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <line x1="142" y1="69" x2="142" y2="73" stroke="#F2C94C" stroke-width="3" stroke-linecap="round"/>
-          <rect x="148" y="52" width="24" height="8" rx="4" fill="#2b2b2b"/>
-          <rect x="150" y="54" width="8" height="4" rx="2" fill="#5b7a99"/>
-          <rect x="162" y="54" width="8" height="4" rx="2" fill="#5b7a99"/>
+        <!-- ÍCONE 3: TEMPERATURA IDEAL (Sol entre Nuvens + Brisa Suave) -->
+        <g id="icone-ideal-brisa" style="opacity:0;">
+          <!-- Sol ao fundo -->
+          <circle cx="150" cy="52" r="10" fill="#F59E0B"/>
+          <!-- Raios de sol -->
+          <line x1="150" y1="38" x2="150" y2="40" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+          <line x1="136" y1="52" x2="138" y2="52" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+          <line x1="140" y1="42" x2="142" y2="44" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Nuvens sobrepostas -->
+          <path d="M135 68 C135 62 142 58 149 61 C153 56 163 57 165 63 C172 63 175 70 170 75 L138 75 C135 73 135 70 135 68 Z" fill="#F3F4F6" stroke="#4B5563" stroke-width="1.5"/>
+
+          <!-- Linhas onduladas de brisa -->
+          <path class="brisa-linha" d="M125 90 Q135 85 145 90 T165 90 T185 90" fill="none" stroke="#0284C7" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/>
+          <path class="brisa-linha" d="M130 102 Q140 97 150 102 T170 102" fill="none" stroke="#0284C7" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="5 5" style="animation-delay: 0.5s;"/>
         </g>
 
+        <!-- ÍCONE 4: QUENTE (> 25°C) -->
         <g id="icone-quente" style="opacity:0;">
-          <path d="M20 122 C14 112 14 102 20 96 C26 102 26 112 20 122Z" fill="#FF6B4A"/>
-          <path d="M20 118 C17 111 17 104 20 100 C23 104 23 111 20 118Z" fill="#F2C94C"/>
-          <path d="M9 120 C6 114 6 108 9 104 C12 108 12 114 9 120Z" fill="#FF6B4A"/>
-          <path d="M31 120 C28 114 28 108 31 104 C34 108 34 114 31 120Z" fill="#FF6B4A"/>
-
-          <line x1="150" y1="128" x2="32" y2="16" stroke="#8a5a2b" stroke-width="2.5"/>
-          <line x1="156" y1="128" x2="38" y2="16" stroke="#8a5a2b" stroke-width="2.5"/>
-          <line x1="126.4" y1="105.6" x2="132.4" y2="105.6" stroke="#8a5a2b" stroke-width="2"/>
-          <line x1="102.8" y1="83.2" x2="108.8" y2="83.2" stroke="#8a5a2b" stroke-width="2"/>
-          <line x1="79.2" y1="60.8" x2="85.2" y2="60.8" stroke="#8a5a2b" stroke-width="2"/>
-          <line x1="55.6" y1="38.4" x2="61.6" y2="38.4" stroke="#8a5a2b" stroke-width="2"/>
-
-          <line x1="40" y1="20" x2="32" y2="24" stroke="#F2C94C" stroke-width="2.5" stroke-linecap="round"/>
-          <rect x="40" y="15" width="8" height="12" rx="2" fill="#F2C94C"/>
-          <circle cx="44" cy="11" r="4.5" fill="#F5C9A0"/>
-          <path d="M39.5 9 A4.5 4.5 0 0 1 48.5 9" fill="#D9483A"/>
-          <line x1="41" y1="27" x2="38" y2="34" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="47" y1="27" x2="50" y2="34" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-
+          <path d="M20 122 C14 112 14 102 20 96 C26 102 26 112 20 122Z" fill="#DC2626"/>
+          <path d="M20 118 C17 111 17 104 20 100 C23 104 23 111 20 118Z" fill="#F59E0B"/>
+          <path d="M9 120 C6 114 6 108 9 104 C12 108 12 114 9 120Z" fill="#DC2626"/>
+          <path d="M31 120 C28 114 28 108 31 104 C34 108 34 114 31 120Z" fill="#DC2626"/>
           <g class="balao">
-            <rect x="55" y="0" width="140" height="26" rx="10" fill="#EAF6FB" stroke="#2b3a55" stroke-width="1"/>
-            <path d="M66 26 L58 34 L78 26Z" fill="#EAF6FB" stroke="#2b3a55" stroke-width="1"/>
-            <text x="125" y="13" text-anchor="middle" dominant-baseline="central" font-size="18" font-weight="bold" font-family="monospace" fill="#2b3a55">QUENTE !!!!</text>
+            <rect x="55" y="0" width="140" height="26" rx="10" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+            <path d="M66 26 L58 34 L78 26Z" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.5"/>
+            <text x="125" y="13" text-anchor="middle" dominant-baseline="central" font-size="18" font-weight="bold" font-family="monospace" fill="#DC2626">QUENTE !!!!</text>
           </g>
-
-          <rect x="190" y="107" width="38" height="16" rx="3" fill="#D9483A"/>
-          <rect x="190" y="99" width="16" height="10" rx="2" fill="#D9483A"/>
-          <rect x="193" y="101" width="8" height="6" rx="1" fill="#cfe8f5"/>
-          <rect class="luz-caminhao" x="196" y="95" width="10" height="3" rx="1" fill="#F2C94C"/>
-          <circle cx="200" cy="125" r="5" fill="#2b2b2b"/>
-          <circle cx="220" cy="125" r="5" fill="#2b2b2b"/>
-          <circle cx="200" cy="125" r="2" fill="#ddd"/>
-          <circle cx="220" cy="125" r="2" fill="#ddd"/>
-
-          <rect x="260" y="107" width="38" height="16" rx="3" fill="#D9483A"/>
-          <rect x="260" y="99" width="16" height="10" rx="2" fill="#D9483A"/>
-          <rect x="263" y="101" width="8" height="6" rx="1" fill="#cfe8f5"/>
-          <rect class="luz-caminhao" x="266" y="95" width="10" height="3" rx="1" fill="#F2C94C" style="animation-delay:.5s;"/>
-          <circle cx="270" cy="125" r="5" fill="#2b2b2b"/>
-          <circle cx="290" cy="125" r="5" fill="#2b2b2b"/>
-          <circle cx="270" cy="125" r="2" fill="#ddd"/>
-          <circle cx="290" cy="125" r="2" fill="#ddd"/>
-
-          <rect x="55" y="104" width="8" height="12" rx="2" fill="#F2C94C"/>
-          <circle cx="59" cy="100" r="4" fill="#F5C9A0"/>
-          <path d="M55 98 A4 4 0 0 1 63 98" fill="#D9483A"/>
-          <line x1="56" y1="116" x2="53" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="62" y1="116" x2="65" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="55" y1="108" x2="35" y2="104" stroke="#F2C94C" stroke-width="2.5" stroke-linecap="round"/>
-          <path class="agua" d="M35 104 Q28 90 24 112" stroke="#4FD1E8" stroke-width="2.5" fill="none" stroke-dasharray="5 5" style="animation-delay:0s;"/>
-          <circle cx="24" cy="112" r="1.4" fill="#4FD1E8"/>
-
-          <rect x="85" y="104" width="8" height="12" rx="2" fill="#F2C94C"/>
-          <circle cx="89" cy="100" r="4" fill="#F5C9A0"/>
-          <path d="M85 98 A4 4 0 0 1 93 98" fill="#D9483A"/>
-          <line x1="86" y1="116" x2="83" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="92" y1="116" x2="95" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="85" y1="108" x2="65" y2="104" stroke="#F2C94C" stroke-width="2.5" stroke-linecap="round"/>
-          <path class="agua" d="M65 104 Q40 80 16 108" stroke="#4FD1E8" stroke-width="2.5" fill="none" stroke-dasharray="5 5" style="animation-delay:.15s;"/>
-          <circle cx="16" cy="108" r="1.4" fill="#4FD1E8"/>
-
-          <rect x="115" y="104" width="8" height="12" rx="2" fill="#F2C94C"/>
-          <circle cx="119" cy="100" r="4" fill="#F5C9A0"/>
-          <path d="M115 98 A4 4 0 0 1 123 98" fill="#D9483A"/>
-          <line x1="116" y1="116" x2="113" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="122" y1="116" x2="125" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="115" y1="108" x2="95" y2="104" stroke="#F2C94C" stroke-width="2.5" stroke-linecap="round"/>
-          <path class="agua" d="M95 104 Q55 75 26 104" stroke="#4FD1E8" stroke-width="2.5" fill="none" stroke-dasharray="5 5" style="animation-delay:.3s;"/>
-          <circle cx="26" cy="104" r="1.4" fill="#4FD1E8"/>
-
-          <rect x="145" y="104" width="8" height="12" rx="2" fill="#F2C94C"/>
-          <circle cx="149" cy="100" r="4" fill="#F5C9A0"/>
-          <path d="M145 98 A4 4 0 0 1 153 98" fill="#D9483A"/>
-          <line x1="146" y1="116" x2="143" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="152" y1="116" x2="155" y2="128" stroke="#2b3a55" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="145" y1="108" x2="125" y2="104" stroke="#F2C94C" stroke-width="2.5" stroke-linecap="round"/>
-          <path class="agua" d="M125 104 Q65 70 18 100" stroke="#4FD1E8" stroke-width="2.5" fill="none" stroke-dasharray="5 5" style="animation-delay:.45s;"/>
-          <circle cx="18" cy="100" r="1.4" fill="#4FD1E8"/>
         </g>
       </svg>
       <div class="readout"><span id="temp-value">--</span><span class="unit">°C</span></div>
@@ -723,7 +718,6 @@
   <div class="controls">
     <button class="action" id="btn-refresh">↻ Atualizar Dados</button>
     <button class="action secondary" id="btn-excel">⬇ Baixar planilha (Excel)</button>
-    <button class="action secondary" id="btn-auto-cop">⚡ Usar Dados Atuais na Calculadora</button>
   </div>
 
 
@@ -733,6 +727,13 @@
       <p class="eyebrow">Série temporal</p>
       <h2>Temperatura ao longo do tempo</h2>
       <div class="chart-wrap"><canvas id="chart-linha"></canvas></div>
+    </div>
+
+    <div class="panel full">
+      <p class="eyebrow">Série temporal · face quente</p>
+      <h2>Temperatura da face quente da Peltier</h2>
+      <div class="chart-wrap"><canvas id="chart-quente"></canvas></div>
+      <p class="sub-label" id="quente-info">Aguardando dados da face quente...</p>
     </div>
 
     <div class="panel">
@@ -749,14 +750,111 @@
   </div>
 
 
-  <!-- ============ CALCULADORA DE COP ============ -->
-  <section class="calc-section" id="secao-calculadora">
+<!-- ============ CENA FINAL:  ============ -->
+  <div class="panel full" style="text-align:center;">
+    <p class="eyebrow">Bastidores</p>
+    <h2></h2>
+    <svg width="100%" viewBox="0 0 160 100" style="max-width:480px; display:block; margin:0 auto; shape-rendering:crispEdges;">
+      <rect x="0" y="0" width="160" height="78" fill="#101a2e"/>
+
+      <rect x="120" y="8" width="32" height="4" fill="#3a4a66"/>
+      <circle class="pisca" cx="126" cy="14" r="2" fill="#FF6B4A" style="animation-delay:0s;"/>
+      <circle class="pisca" cx="136" cy="14" r="2" fill="#8CD9A5" style="animation-delay:.4s;"/>
+      <circle class="pisca" cx="146" cy="14" r="2" fill="#F2C94C" style="animation-delay:.8s;"/>
+
+      <rect x="0" y="72" width="160" height="6" fill="#6b4a2b"/>
+      <rect x="0" y="78" width="160" height="4" fill="#4a3320"/>
+      <rect x="14" y="82" width="6" height="14" fill="#4a3320"/>
+      <rect x="140" y="82" width="6" height="14" fill="#4a3320"/>
+
+      <rect x="10" y="48" width="34" height="24" rx="2" fill="#2b2b2b"/>
+      <rect x="14" y="52" width="26" height="16" fill="#06241a"/>
+      <path class="onda" d="M14 60 L18 56 L22 64 L26 54 L30 66 L34 58 L38 62 L40 60" fill="none" stroke="#4FD1E8" stroke-width="1.4" stroke-dasharray="4 3"/>
+      <circle cx="16" cy="70" r="1.5" fill="#666"/>
+      <circle cx="22" cy="70" r="1.5" fill="#666"/>
+
+      <rect x="118" y="60" width="34" height="12" fill="#d8d0c0" stroke="#a89f8c" stroke-width="0.5"/>
+      <line x1="122" y1="60" x2="122" y2="52" stroke="#e74c3c" stroke-width="1.5"/>
+      <line x1="128" y1="60" x2="128" y2="50" stroke="#3498db" stroke-width="1.5"/>
+      <line x1="134" y1="60" x2="134" y2="53" stroke="#f1c40f" stroke-width="1.5"/>
+      <circle class="pisca" cx="128" cy="49" r="2" fill="#ff4d4d"/>
+
+      <rect x="58" y="46" width="26" height="26" fill="#EAF6FB" stroke="#B7DDE8" stroke-width="1"/>
+      <line x1="71" y1="46" x2="71" y2="72" stroke="#B7DDE8" stroke-width="1"/>
+      <rect x="66" y="40" width="10" height="6" fill="#F5C9A0"/>
+      <rect x="60" y="22" width="22" height="20" rx="3" fill="#F5C9A0"/>
+      <rect x="58" y="18" width="26" height="8" fill="#3a2a1a"/>
+      <rect x="58" y="24" width="4" height="10" fill="#3a2a1a"/>
+      <rect x="80" y="24" width="4" height="10" fill="#3a2a1a"/>
+      <rect x="63" y="30" width="6" height="5" fill="none" stroke="#2b2b2b" stroke-width="1.2"/>
+      <rect x="73" y="30" width="6" height="5" fill="none" stroke="#2b2b2b" stroke-width="1.2"/>
+      <line x1="69" y1="32" x2="73" y2="32" stroke="#2b2b2b" stroke-width="1.2"/>
+      <line x1="67" y1="39" x2="75" y2="39" stroke="#8a5a2b" stroke-width="1"/>
+
+      <rect x="46" y="50" width="14" height="7" fill="#EAF6FB"/>
+      <rect x="42" y="50" width="6" height="6" fill="#F5C9A0"/>
+
+      <rect x="82" y="50" width="14" height="7" fill="#EAF6FB"/>
+      <g class="flutuar">
+        <rect x="94" y="50" width="6" height="6" fill="#F5C9A0"/>
+        <rect x="98" y="49" width="16" height="3" fill="#555"/>
+        <rect x="112" y="49" width="4" height="3" fill="#ff8a3d"/>
+        <circle class="fumaca" cx="114" cy="48" r="1.2" fill="#cfd6de" style="animation-delay:0s;"/>
+        <circle class="fumaca" cx="115" cy="48" r="1" fill="#cfd6de" style="animation-delay:.6s;"/>
+        <circle class="fumaca" cx="113" cy="48" r="1" fill="#cfd6de" style="animation-delay:1.2s;"/>
+      </g>
+    </svg>
+    <p style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); margin-top: 12px; line-height: 1.6;">
+      MNPEF · SBF<br>UEFS · POLO 06
+    </p>
+  </div>
+
+</main>
+
+<!-- MODAL DE INSTRUÇÕES -->
+<div class="modal-overlay" id="modal-instrucoes">
+  <div class="modal-content">
+    <button class="close-modal" id="btn-fechar-modal">&times;</button>
+    <h3>📖 Como Coletar os Dados para o Cálculo de COP</h3>
+    <ol>
+      <li><strong>Dimensões da Caixa:</strong> Com uma régua ou fita métrica, meça as dimensões internas da caixa de isopor (Comprimento, Largura e Altura) e a espessura da parede do isopor.</li>
+      <li><strong>Obtenção do Tempo e Variação Térmica:</strong> Ligue o sistema e anote a temperatura inicial no ambiente/caixa. Deixe o sistema resfriar até estabilizar ou atingir a temperatura alvo (ex: 15°C) e anote o tempo em minutos gasto nesse processo.</li>
+      <li><strong>Preenchimento Automático via Dashboard:</strong> Você pode clicar no botão <em>"⚡ Usar Dados Atuais"</em> no topo desta aba para puxar diretamente o tempo e temperaturas registrados pelo ESP32 e sensor termopar!</li>
+      <li><strong>Ajuste Elétrico:</strong> Caso possua multímetro, informe a tensão real e corrente medidas. Caso contrário, mantenha o padrão de 12V / 4.58A da TEC1-1207.</li>
+      <li><strong>Clique em Calcular:</strong> O sistema aplicará a Primeira Lei da Termodinâmica juntamente com a Condução de Fourier para entregar o Coeficiente de Desempenho real do seu protótipo.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ============ PAINEL ADMIN (protegido por senha) ============ -->
+<div class="modal-overlay" id="modal-admin" role="dialog" aria-modal="true" aria-labelledby="titulo-admin">
+  <div class="modal-content">
+    <button class="close-modal" id="btn-fechar-admin" aria-label="Fechar painel admin">&times;</button>
+    <h3 id="titulo-admin">🔒 Painel Admin</h3>
+
+    <!-- Etapa 1: senha -->
+    <div id="admin-etapa-senha">
+      <p class="sub-label" style="margin-top:-6px; margin-bottom:14px;">Digite a senha para acessar a calculadora de COP.</p>
+      <div class="input-group">
+        <label for="input-senha-admin">Senha</label>
+        <input type="password" id="input-senha-admin" autocomplete="off">
+      </div>
+      <button class="action accent" id="btn-confirmar-senha" style="width:100%; justify-content:center; margin-top:8px;">Entrar</button>
+      <p id="erro-senha-admin" role="alert" style="display:none; color:var(--hot); font-size:13px; font-weight:600; margin:10px 0 0;">Senha incorreta.</p>
+    </div>
+
+    <!-- Etapa 2: calculadora de COP (liberada pela senha) -->
+    <div id="admin-etapa-controle" style="display:none;">
+    <div id="secao-calculadora">
     <div class="calc-header">
       <div class="calc-title">
         <h2>Calculadora do Coeficiente de Desempenho (COP)</h2>
         <p>Estime a eficiência termodinâmica da célula Peltier com base na massa de ar resfriada e perdas de condução do isopor.</p>
       </div>
-      <button class="action secondary" id="btn-instrucoes">❓ Instruções de Uso</button>
+      <div class="calc-acoes">
+        <button class="action secondary" id="btn-auto-cop">⚡ Usar Dados Atuais</button>
+        <button class="action secondary" id="btn-instrucoes">❓ Instruções de Uso</button>
+      </div>
     </div>
 
     <div class="calc-grid">
@@ -846,81 +944,10 @@
         <div class="val" id="res-massa">--</div>
       </div>
     </div>
-  </section>
+    </div>
 
-  <!-- ============ CENA FINAL:  ============ -->
-  <div class="panel full" style="text-align:center;">
-    <p class="eyebrow">Bastidores</p>
-    <h2></h2>
-    <svg width="100%" viewBox="0 0 160 100" style="max-width:480px; display:block; margin:0 auto; shape-rendering:crispEdges;">
-      <rect x="0" y="0" width="160" height="78" fill="#101a2e"/>
-
-      <rect x="120" y="8" width="32" height="4" fill="#3a4a66"/>
-      <circle class="pisca" cx="126" cy="14" r="2" fill="#FF6B4A" style="animation-delay:0s;"/>
-      <circle class="pisca" cx="136" cy="14" r="2" fill="#8CD9A5" style="animation-delay:.4s;"/>
-      <circle class="pisca" cx="146" cy="14" r="2" fill="#F2C94C" style="animation-delay:.8s;"/>
-
-      <rect x="0" y="72" width="160" height="6" fill="#6b4a2b"/>
-      <rect x="0" y="78" width="160" height="4" fill="#4a3320"/>
-      <rect x="14" y="82" width="6" height="14" fill="#4a3320"/>
-      <rect x="140" y="82" width="6" height="14" fill="#4a3320"/>
-
-      <rect x="10" y="48" width="34" height="24" rx="2" fill="#2b2b2b"/>
-      <rect x="14" y="52" width="26" height="16" fill="#06241a"/>
-      <path class="onda" d="M14 60 L18 56 L22 64 L26 54 L30 66 L34 58 L38 62 L40 60" fill="none" stroke="#4FD1E8" stroke-width="1.4" stroke-dasharray="4 3"/>
-      <circle cx="16" cy="70" r="1.5" fill="#666"/>
-      <circle cx="22" cy="70" r="1.5" fill="#666"/>
-
-      <rect x="118" y="60" width="34" height="12" fill="#d8d0c0" stroke="#a89f8c" stroke-width="0.5"/>
-      <line x1="122" y1="60" x2="122" y2="52" stroke="#e74c3c" stroke-width="1.5"/>
-      <line x1="128" y1="60" x2="128" y2="50" stroke="#3498db" stroke-width="1.5"/>
-      <line x1="134" y1="60" x2="134" y2="53" stroke="#f1c40f" stroke-width="1.5"/>
-      <circle class="pisca" cx="128" cy="49" r="2" fill="#ff4d4d"/>
-
-      <rect x="58" y="46" width="26" height="26" fill="#EAF6FB" stroke="#B7DDE8" stroke-width="1"/>
-      <line x1="71" y1="46" x2="71" y2="72" stroke="#B7DDE8" stroke-width="1"/>
-      <rect x="66" y="40" width="10" height="6" fill="#F5C9A0"/>
-      <rect x="60" y="22" width="22" height="20" rx="3" fill="#F5C9A0"/>
-      <rect x="58" y="18" width="26" height="8" fill="#3a2a1a"/>
-      <rect x="58" y="24" width="4" height="10" fill="#3a2a1a"/>
-      <rect x="80" y="24" width="4" height="10" fill="#3a2a1a"/>
-      <rect x="63" y="30" width="6" height="5" fill="none" stroke="#2b2b2b" stroke-width="1.2"/>
-      <rect x="73" y="30" width="6" height="5" fill="none" stroke="#2b2b2b" stroke-width="1.2"/>
-      <line x1="69" y1="32" x2="73" y2="32" stroke="#2b2b2b" stroke-width="1.2"/>
-      <line x1="67" y1="39" x2="75" y2="39" stroke="#8a5a2b" stroke-width="1"/>
-
-      <rect x="46" y="50" width="14" height="7" fill="#EAF6FB"/>
-      <rect x="42" y="50" width="6" height="6" fill="#F5C9A0"/>
-
-      <rect x="82" y="50" width="14" height="7" fill="#EAF6FB"/>
-      <g class="flutuar">
-        <rect x="94" y="50" width="6" height="6" fill="#F5C9A0"/>
-        <rect x="98" y="49" width="16" height="3" fill="#555"/>
-        <rect x="112" y="49" width="4" height="3" fill="#ff8a3d"/>
-        <circle class="fumaca" cx="114" cy="48" r="1.2" fill="#cfd6de" style="animation-delay:0s;"/>
-        <circle class="fumaca" cx="115" cy="48" r="1" fill="#cfd6de" style="animation-delay:.6s;"/>
-        <circle class="fumaca" cx="113" cy="48" r="1" fill="#cfd6de" style="animation-delay:1.2s;"/>
-      </g>
-    </svg>
-    <p style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-muted); margin-top: 12px; line-height: 1.6;">
-      MNPEF · SBF<br>UEFS · POLO 06
-    </p>
-  </div>
-
-</main>
-
-<!-- MODAL DE INSTRUÇÕES -->
-<div class="modal-overlay" id="modal-instrucoes">
-  <div class="modal-content">
-    <button class="close-modal" id="btn-fechar-modal">&times;</button>
-    <h3>📖 Como Coletar os Dados para o Cálculo de COP</h3>
-    <ol>
-      <li><strong>Dimensões da Caixa:</strong> Com uma régua ou fita métrica, meça as dimensões internas da caixa de isopor (Comprimento, Largura e Altura) e a espessura da parede do isopor.</li>
-      <li><strong>Obtenção do Tempo e Variação Térmica:</strong> Ligue o sistema e anote a temperatura inicial no ambiente/caixa. Deixe o sistema resfriar até estabilizar ou atingir a temperatura alvo (ex: 15°C) e anote o tempo em minutos gasto nesse processo.</li>
-      <li><strong>Preenchimento Automático via Dashboard:</strong> Você pode clicar no botão <em>"⚡ Usar Dados Atuais na Calculadora"</em> no topo do painel para puxar diretamente o tempo e temperaturas registrados pelo ESP32 e sensor termopar!</li>
-      <li><strong>Ajuste Elétrico:</strong> Caso possua multímetro, informe a tensão real e corrente medidas. Caso contrário, mantenha o padrão de 12V / 4.58A da TEC1-1207.</li>
-      <li><strong>Clique em Calcular:</strong> O sistema aplicará a Primeira Lei da Termodinâmica juntamente com a Condução de Fourier para entregar o Coeficiente de Desempenho real do seu protótipo.</li>
-    </ol>
+      <button class="action secondary" id="btn-sair-admin" style="width:100%; justify-content:center; margin-top:16px;">Sair</button>
+    </div>
   </div>
 </div>
 
@@ -935,6 +962,8 @@
    ====================================================================== */
 const THINGSPEAK_CHANNEL_ID   = "3457146";      // ex: 2345678
 const THINGSPEAK_READ_API_KEY = "M0DA19W2KF2IQSDC";    // aba API Keys do canal
+// Senha do painel admin (também visível no código-fonte: serve para esconder o painel, não para proteger de verdade).
+const ADMIN_SENHA = "MNPEF";
 const RESULTS_COUNT           = 100;                        // quantas leituras recentes buscar
 const REFRESH_INTERVAL_MS     = 20000;                      // igual ao intervalo do ESP32
 
@@ -947,7 +976,7 @@ const BAIXA_TEMP = 18.0;
 /* ====================================================================== */
 
 let feedsAtuais = [];
-let chartLinha, chartColuna, chartSetores;
+let chartLinha, chartColuna, chartSetores, chartQuente;
 
 function statusDaTemperatura(t){
   if (t >= ALERTA_ALTA) return { label: "ALERTA: TEMP ALTA", color: getVar('--hot') };
@@ -961,13 +990,13 @@ function getVar(name){
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
-/* ============ TERMÔMETRO ANIMADO (4 cenas: neve sólida, derretendo, sol, bombeiros) ============
+/* ============ TERMÔMETRO ANIMADO (4 cenas: neve sólida, derretendo, sol entre nuvens, chamas) ============
    Faixa de cor/ícone do desenho do termômetro (independente do status textual acima,
    que usa os limiares reais do firmware ALERTA_ALTA/IDEAL_MAX/IDEAL_MIN/BAIXA_TEMP) */
 function corTermometro(t){
-  if (t > 25) return '#FF6B4A';
-  if (t >= 22) return '#F2C94C';
-  return '#4FD1E8';
+  if (t > 25) return getVar('--hot');
+  if (t >= 22) return '#F59E0B';
+  return getVar('--cold');
 }
 
 function atualizarTermometro(t){
@@ -988,7 +1017,7 @@ function atualizarTermometro(t){
 
   document.getElementById('icone-frio-solido').style.opacity = (t <= 10) ? 1 : 0;
   document.getElementById('icone-frio-derretendo').style.opacity = (t > 10 && t < 22) ? 1 : 0;
-  document.getElementById('icone-morno').style.opacity = (t >= 22 && t <= 25) ? 1 : 0;
+  document.getElementById('icone-ideal-brisa').style.opacity = (t >= 22 && t <= 25) ? 1 : 0;
   document.getElementById('icone-quente').style.opacity = (t > 25) ? 1 : 0;
 }
 
@@ -1074,11 +1103,45 @@ function atualizarGraficos(){
         label: 'Temperatura (°C)',
         data: temps,
         borderColor: cor,
-        backgroundColor: 'rgba(79,209,232,0.12)',
+        backgroundColor: 'rgba(3,105,161,0.12)',
         borderWidth: 2,
         pointRadius: 0,
         tension: 0.25,
         fill: true
+      }]
+    },
+    options: opcoesBase({ eixoX: true })
+  });
+
+  // ---- GRÁFICO DE LINHA: temperatura da face quente (field5 do ThingSpeak) ----
+  const quentes = feedsAtuais.map(f => {
+    const v = parseFloat(f.field5);
+    return isNaN(v) ? null : v;
+  });
+  const quentesValidos = quentes.filter(v => v !== null);
+  const infoQuente = document.getElementById('quente-info');
+  if (quentesValidos.length === 0) {
+    infoQuente.textContent = "Sem leituras da face quente ainda. Confira se o ESP32 está enviando o field5 ao ThingSpeak.";
+  } else {
+    infoQuente.textContent = "Última: " + quentesValidos[quentesValidos.length - 1].toFixed(1) + " °C"
+      + " · Máxima no período: " + Math.max(...quentesValidos).toFixed(1) + " °C"
+      + " · Mínima no período: " + Math.min(...quentesValidos).toFixed(1) + " °C";
+  }
+  if (chartQuente) chartQuente.destroy();
+  chartQuente = new Chart(document.getElementById('chart-quente'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Face quente (°C)',
+        data: quentes,
+        borderColor: getVar('--hot'),
+        backgroundColor: 'rgba(220,38,38,0.12)',
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.25,
+        fill: true,
+        spanGaps: true
       }]
     },
     options: opcoesBase({ eixoX: true })
@@ -1223,9 +1286,6 @@ function usarDadosAtuaisNoCOP(){
   document.getElementById('temp-init').value = tInit.toFixed(1);
   document.getElementById('temp-final').value = tFinal.toFixed(1);
   document.getElementById('time-min').value = diffMin.toFixed(1);
-
-  // Rolagem suave até a calculadora
-  document.getElementById('secao-calculadora').scrollIntoView({ behavior: 'smooth' });
   
   // Executa o cálculo imediatamente
   calcularCOP();
@@ -1241,6 +1301,7 @@ function baixarExcel(){
   const linhas = feedsAtuais.map(f => ({
     "Data/Hora": new Date(f.created_at).toLocaleString('pt-BR'),
     "Temperatura (°C)": parseFloat(f.field1),
+    "Face quente (°C)": f.field5 !== null && f.field5 !== undefined && !isNaN(parseFloat(f.field5)) ? parseFloat(f.field5) : "",
     "Cronômetro (s)": f.field2 !== null && f.field2 !== undefined ? Number(f.field2) : "",
     "Peltier": f.field3 === "1" ? "LIGADA" : "DESLIGADA",
     "Ventilador": f.field4 === "1" ? "LIGADO" : "DESLIGADO"
@@ -1249,6 +1310,7 @@ function baixarExcel(){
   const planilha = XLSX.utils.json_to_sheet(linhas);
   planilha['!cols'] = [
     { wch: 20 },
+    { wch: 16 },
     { wch: 16 },
     { wch: 15 },
     { wch: 12 },
@@ -1282,6 +1344,65 @@ function reiniciarAutoRefresh(){
   if (intervaloAtual) clearInterval(intervaloAtual);
   intervaloAtual = setInterval(buscarDados, REFRESH_INTERVAL_MS);
 }
+
+/* ============ PAINEL ADMIN: senha + calculadora de COP ============
+   A senha só esconde o painel de visitantes casuais: ela fica no código-fonte desta página pública,
+   então não é uma proteção de verdade. */
+const modalAdmin = document.getElementById('modal-admin');
+const etapaSenha = document.getElementById('admin-etapa-senha');
+const etapaControle = document.getElementById('admin-etapa-controle');
+let adminLiberado = false;
+
+function mostrarEtapaAdmin(){
+  etapaSenha.style.display = adminLiberado ? 'none' : 'block';
+  etapaControle.style.display = adminLiberado ? 'block' : 'none';
+  modalAdmin.querySelector('.modal-content').classList.toggle('largo', adminLiberado);
+}
+
+function abrirAdmin(){
+  adminLiberado = false;   // toda vez que abre, pede a senha de novo
+  document.getElementById('erro-senha-admin').style.display = 'none';
+  document.getElementById('input-senha-admin').value = '';
+  mostrarEtapaAdmin();
+  modalAdmin.classList.add('active');
+  setTimeout(() => document.getElementById('input-senha-admin').focus(), 50);
+}
+
+function fecharAdmin(){
+  adminLiberado = false;
+  mostrarEtapaAdmin();   // esconde de verdade a calculadora: nem o teclado alcança sem a senha
+  modalAdmin.classList.remove('active');
+  document.getElementById('input-senha-admin').value = '';
+  document.getElementById('btn-abrir-admin').focus();
+}
+
+function tentarEntrarAdmin(){
+  const campo = document.getElementById('input-senha-admin');
+  if (campo.value === ADMIN_SENHA) {
+    adminLiberado = true;
+    campo.value = '';
+    document.getElementById('erro-senha-admin').style.display = 'none';
+    mostrarEtapaAdmin();
+    document.getElementById('box-c').focus();
+  } else {
+    document.getElementById('erro-senha-admin').style.display = 'block';
+    campo.select();
+  }
+}
+
+document.getElementById('btn-abrir-admin').addEventListener('click', abrirAdmin);
+document.getElementById('btn-fechar-admin').addEventListener('click', fecharAdmin);
+document.getElementById('btn-sair-admin').addEventListener('click', fecharAdmin);
+// clicar fora só fecha na etapa da senha (não perde o que se está digitando na calculadora)
+modalAdmin.addEventListener('click', (e) => { if (e.target === modalAdmin && !adminLiberado) fecharAdmin(); });
+document.getElementById('btn-confirmar-senha').addEventListener('click', tentarEntrarAdmin);
+document.getElementById('input-senha-admin').addEventListener('keydown', (e) => { if (e.key === 'Enter') tentarEntrarAdmin(); });
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  const instrucoes = document.getElementById('modal-instrucoes');
+  if (instrucoes.classList.contains('active')) { instrucoes.classList.remove('active'); return; }   // fecha primeiro o que está por cima
+  if (modalAdmin.classList.contains('active')) fecharAdmin();
+});
 
 /* ============ INICIALIZAÇÃO ============ */
 buscarDados();
